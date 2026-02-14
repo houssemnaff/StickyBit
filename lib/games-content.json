@@ -1,0 +1,503 @@
+{
+  "vo_script": {
+    "ar": "مرحبا! احنا في CyberAman هنساعدك تفهم كيفاش المهاجمون يسرقوا بيانات التونسيين. الهجوم يمر بـ 5 مراحل: أولا يجمعوا معلومات عليك (Reconnaissance)، بعدين يبعثولك رسالة مريبة أو رابط وهمي (Leurre)، ثم يلخبطوك وياخذوا الكود أو البيانات (Capture)، بعدين يستعملوا الحساب ديك (Exploitation)، وفي الآخر يبيعوا البيانات أو يحرقوا الحساب (Monétisation). المفتاح: ما تشارك الـ OTP أبدا، شد بالدوامين والرابط، وفعل الـ 2FA!",
+    "fr_summary": "CyberAman vous enseigne les 5 étapes d'une attaque : reconnaissance (collecte d'infos), leurre (SMS/email frauduleux), capture (vol du code OTP ou données), exploitation (accès au compte), et monétisation (revente de données). Pour vous protéger : jamais partager votre OTP, vérifier l'URL et le domaine, activer la 2FA systématiquement. Chaque étape a des signaux d'alerte (urgence artificielle, liens raccourcis, domaines suspects) et des contre-mesures concrètes adaptées au contexte tunisien (banques, Poste, WhatsApp, marketplaces)."
+  },
+  "attacker_playbook": {
+    "stages": [
+      {
+        "name": "Reconnaissance",
+        "local_examples": [
+          "L'attaquant scrape ton profil Facebook pour trouver le nom de ta banque",
+          "Il achète une liste de numéros tunisiens piratée sur le dark web",
+          "Il regarde tes publications pour voir si tu mentionnes Poste Tunisie ou Ooredoo",
+          "Il cherche ton email sur LinkedIn pour te cibler avec un faux lien de candidature"
+        ],
+        "risk_signals": [
+          "Tes données personnelles sont visibles sur les réseaux sociaux",
+          "Tu utilises le même email/mot de passe partout",
+          "Pas de privacy settings sur tes comptes",
+          "Tu acceptes les demandes d'amis inconnues"
+        ],
+        "protection": [
+          "Rends ton profil Facebook privé (Privacy > Friends only)",
+          "Utilise des emails différents pour chaque service important",
+          "Utilise un gestionnaire de mots de passe (Bitwarden, 1Password)",
+          "Vérifie qui te demande en ami avant d'accepter"
+        ]
+      },
+      {
+        "name": "Leurre",
+        "local_examples": [
+          "SMS: 'بنك تونس: تم الكشف عن نشاط مريب. تأكد من حسابك: bit.ly/secure2024'",
+          "Email: 'Poste Tunisie - Votre colis n'a pu être livré. Cliquez ici'",
+          "WhatsApp: 'Ami d'un ami envoie: Salut, tu peux m'envoyer ton OTP? C'est pour une vérification'",
+          "Marketplace: Annonce trop bonne pour être vraie (téléphone neuf à 50 DT) avec lien vers site clône"
+        ],
+        "risk_signals": [
+          "Urgence artificielle (compte bloqué, livraison urgente)",
+          "Lien raccourci ou domaine suspect (bit.ly, tnbank-verify.tk)",
+          "Grammaire bizarre ou fautes d'orthographe",
+          "Demande directe du code OTP ou du mot de passe",
+          "Logo contrefait ou couleurs pas exactes"
+        ],
+        "protection": [
+          "Ne clique jamais sur les liens dans les SMS/emails - appelle la banque directement",
+          "Ouvre l'app officielle au lieu de cliquer sur un lien reçu",
+          "Demande-toi: pourquoi la banque m'enverrait un lien pour vérifier? Elle peut pas accéder à mon compte?",
+          "Partage le screenshot du message suspect avec CyberAman (Signaler une arnaque)"
+        ]
+      },
+      {
+        "name": "Capture",
+        "local_examples": [
+          "Tu entres ton numéro de compte + mot de passe sur le site clône",
+          "L'attaquant capture automatiquement l'OTP envoyé par SMS",
+          "Un ami WhatsApp te contacte et te demande de lui lire le code OTP que tu viens de recevoir",
+          "Tu télécharges une 'app de suivi de commande' qui enregistre tous tes identifiants",
+          "Un 'agent Poste' t'appelle et te demande ton PIN pour 'débloquer ton colis'"
+        ],
+        "risk_signals": [
+          "Le site demande TOUS tes identifiants (pas seulement le code OTP)",
+          "Un ami/famille demande l'OTP - ils ne devraient JAMAIS le faire",
+          "Une app a trop de permissions (accès aux fichiers, SMS, contacts)",
+          "Un appel non attendu te demande des infos sensibles",
+          "Tu donnes tes données et le 'service' n'aboutit à rien"
+        ],
+        "protection": [
+          "Ne partage JAMAIS le code OTP - même pas avec ta mère, ni la banque!",
+          "Si quelqu'un te demande l'OTP, dis non et signale-le",
+          "Vérifie les permissions avant d'installer une app",
+          "La banque n'appellera jamais pour demander ton PIN - raccroche",
+          "Active 2FA ou biométrie (empreinte digitale) quand c'est possible"
+        ]
+      },
+      {
+        "name": "Exploitation",
+        "local_examples": [
+          "L'attaquant se connecte à ton compte bancaire et transfère 500 DT à un compte fantôme",
+          "Il utilise ton compte Facebook pour faire du phishing auprès de tes amis",
+          "Il vide ton compte Jumia/Tunisianet et revend les crédits",
+          "Il change ton email de récupération et te verrouille complètement du compte",
+          "Il vend ton accès WhatsApp Business à quelqu'un qui va l'utiliser pour des arnaques"
+        ],
+        "risk_signals": [
+          "Tu reçois des notifications d'accès d'un endroit inconnu (ville/appareil étrange)",
+          "Tes amis disent que tu les spams ou que tu envoies des messages bizarres",
+          "Tes mots de passe ne fonctionnent plus",
+          "Ton numéro est désactivé sans ta demande",
+          "Tu vois des transactions inconnues sur ton compte"
+        ],
+        "protection": [
+          "Active les alertes de connexion (Settings > Login Alerts)",
+          "Vérifie régulièrement les appareils connectés à ton compte",
+          "Utilise une 2FA forte (app d'authentification, pas SMS seul)",
+          "Garde ton téléphone à jour (security patches)",
+          "Signale immédiatement à ta banque si tu vois une transaction anormale"
+        ]
+      },
+      {
+        "name": "Monétisation",
+        "local_examples": [
+          "Les données volées (nom, numéro, adresse email) sont vendues pour 1-5 DT par enregistrement",
+          "Les accès bancaires fonctionnels se vendent 50-200 DT sur le dark web",
+          "Les comptes Facebook populaires avec 5k+ amis se revendent pour 20-100 DT",
+          "Les listes de numéros tunisiens + emails sont vendues par milliers pour du spam/phishing",
+          "L'attaquant utilise ton compte pour faire du money laundering (blanchiment)"
+        ],
+        "risk_signals": [
+          "Tu reçois soudain plein de messages spam ou de phishing",
+          "Des gens que tu ne connais pas te demandent de l'argent sur Messenger",
+          "Ton compte a soudain reçu des amis bizarres ou des followers spammeurs",
+          "Tu vois des abonnements facturés dans ta boîte de réception",
+          "Ta banque détecte une activité suspecte et gèle ton compte temporairement"
+        ],
+        "protection": [
+          "Signale immédiatement si ton compte est compromis (Change tous tes mots de passe)",
+          "Demande une gestion du compte à la banque (elle peut surveiller les transactions)",
+          "Désactive tous les accès d'app tiers (YouTube, Spotify, etc. n'ont pas besoin d'accès root)",
+          "Si tes données sont vendues, il est trop tard - agis vite pour limiter les dégâts",
+          "Partage ta story d'arnaque via CyberAman pour aider d'autres"
+        ]
+      }
+    ]
+  },
+  "games": {
+    "phish_or_safe": [
+      {
+        "id": "phish_1",
+        "text": "SMS: 'بنك تونس: تم الكشف عن نشاط غريب. تأكد من حسابك الآن: bit.ly/bnk-verify'",
+        "language": "ar",
+        "choices": ["آمن", "احتيال"],
+        "correctChoice": "احتيال",
+        "explanations": [
+          "هذا رسالة تصيد احتيالي. البنك لن يرسل لك رابط قصير (bit.ly) أبدا وقت ما يطلب منك تأكيد.",
+          "الحل: لا تنقر على الرابط. شغّل الـ app الرسمية للبنك أو اتصل على الرقم بالبطاقة."
+        ],
+        "tags": ["phishing", "sms", "urgent"],
+        "riskSignals": ["urgence", "short_link", "fake_brand"]
+      },
+      {
+        "id": "phish_2",
+        "text": "Email: 'Poste Tunisie - Bonjour, votre colis ne peut pas être livré. Cliquez ici pour confirmer l'adresse'",
+        "language": "fr",
+        "choices": ["Sûr", "Arnaque"],
+        "correctChoice": "Arnaque",
+        "explanations": [
+          "Poste Tunisie n'envoie pas d'emails avec des liens de confirmation. C'est une technique classique de phishing.",
+          "Action: Ouvre l'app Poste Tunisie directement ou appelle le service client. Ne clique jamais sur les liens des emails."
+        ],
+        "tags": ["phishing", "email", "marketplace"],
+        "riskSignals": ["urgence", "fake_brand", "suspicious_email"]
+      },
+      {
+        "id": "phish_3",
+        "text": "SMS: 'Ooredoo: إحنا راجعين بـ خدمة جديدة! Activez maintenant: ooredoo-activate.xyz'",
+        "language": "ar",
+        "choices": ["آمن", "احتيال"],
+        "correctChoice": "احتيال",
+        "explanations": [
+          "الـ TLD (.xyz) مريب + الخليط بين العربية والفرنسية + رابط مباشر. هذا 100% احتيال.",
+          "الحل: اتصل بـ Ooredoo على 9090 أو استخدم الـ app الرسمية. لا توافق على أي تفعيل من رسالة."
+        ],
+        "tags": ["phishing", "sms", "telecom"],
+        "riskSignals": ["suspicious_tld", "mixed_language", "short_link"]
+      },
+      {
+        "id": "phish_4",
+        "text": "WhatsApp: 'صديق قديم من الجامعة: السلام! تذكرني فيك؟ في عرض شغل تعجبك؟ linkedin.fr-verify.tk'",
+        "language": "ar",
+        "choices": ["آمن", "احتيال"],
+        "correctChoice": "احتيال",
+        "explanations": [
+          "حساب جديد يدّعي أنه قديم + رابط غريب (linkedin.fr-verify.tk) + عرض شغل غير متوقع = احتيال.",
+          "الحل: سأل صديقك على رقم آخر إذا هو اللي بعت الرسالة. لا تنقر على الرابط."
+        ],
+        "tags": ["phishing", "whatsapp", "social_engineering"],
+        "riskSignals": ["fake_brand", "suspicious_tld", "social_engineering"]
+      },
+      {
+        "id": "phish_5",
+        "text": "SMS: 'البنك التونسي: تم سحب 500 دت من حسابك. الساعة: 14:35. إذا ما أنتش الراجل، تصل بـ: banque-tunisia.tn'",
+        "language": "ar",
+        "choices": ["آمن", "احتيال"],
+        "correctChoice": "احتيال",
+        "explanations": [
+          "الرسالة تبدو واقعية (تاريخ + مبلغ)، لكن الـ domain 'banque-tunisia.tn' مريب. البنك يستعمل domain رسمي وليس domain وهمي.",
+          "الحل: اتصل بالبنك على الرقم بالبطاقة. لا تنقر على أي رابط في الرسالة."
+        ],
+        "tags": ["phishing", "sms", "banking"],
+        "riskSignals": ["fake_brand", "suspicious_tld"]
+      },
+      {
+        "id": "phish_6",
+        "text": "Email: 'Jumia Tunisia - خصم 70% على جميع الهواتف! استنفذ الفرصة: jumia-promo.cf'",
+        "language": "ar",
+        "choices": ["آمن", "احتيال"],
+        "correctChoice": "احتيال",
+        "explanations": [
+          "الـ .cf domain مريب جدا + خصم غير واقعي (70%) = احتيال. Jumia لا ترسل روابط مباشرة لـ promo.",
+          "الحل: روح عـ الـ app Jumia أو موقع jumia.tn مباشرة. لا تنقر على روابط من emails."
+        ],
+        "tags": ["phishing", "email", "marketplace"],
+        "riskSignals": ["suspicious_tld", "unrealistic_offer"]
+      },
+      {
+        "id": "phish_7",
+        "text": "SMS: 'Tunisianet: عرض حصري! iPhone 14 بـ 799 دت فقط (السعر الأصلي 3000 دت). رابط: tny.tn/iphone14'",
+        "language": "ar",
+        "choices": ["آمن", "احتيال"],
+        "correctChoice": "احتيال",
+        "explanations": [
+          "عرض غير واقعي (iPhone 14 بـ 799 دت) + رابط قصير = احتيال كلاسيكي.",
+          "الحل: ادخل tunisianet.com.tn مباشرة. إذا العرض حقيقي، راح تلقاه على الموقع الرسمي."
+        ],
+        "tags": ["phishing", "sms", "ecommerce"],
+        "riskSignals": ["unrealistic_offer", "short_link"]
+      },
+      {
+        "id": "phish_8",
+        "text": "WhatsApp: 'أمك: أنا في الدار.. أرجوك بعت لي الرقم ديك الـ OTP اللي وصلك أهم. البنك طلبه عشان نقولتّي أموالك'",
+        "language": "ar",
+        "choices": ["آمن", "احتيال"],
+        "correctChoice": "احتيال",
+        "explanations": [
+          "حتى لو كانت 'أمك'، البنك ما يطلب أبدا الـ OTP. هذا احتيال، وربما حسابها اتهاك.",
+          "الحل: اتصل بـ أمك من رقم آخر. قول لها أن حسابها ربما اتهاك وتغير الـ password."
+        ],
+        "tags": ["phishing", "whatsapp", "otp_scam"],
+        "riskSignals": ["fake_family", "otp_request"]
+      },
+      {
+        "id": "phish_9",
+        "text": "SMS: 'التأمين الوطني: تحديث إجباري لحسابك. أدخل بيانات جديدة: tny.tn/cartetrav2024'",
+        "language": "ar",
+        "choices": ["آمن", "احتيال"],
+        "correctChoice": "احتيال",
+        "explanations": [
+          "رابط قصير + طلب بيانات 'إجباري' = احتيال. الـ CNRPS لا يطلب بيانات عبر رسائل.",
+          "الحل: اتصل بـ CNRPS مباشرة أو دخل الموقع cnrps.tn من متصفحك، لا من الرابط في الرسالة."
+        ],
+        "tags": ["phishing", "sms", "government"],
+        "riskSignals": ["urgence", "short_link", "data_request"]
+      },
+      {
+        "id": "phish_10",
+        "text": "Email: 'Apple ID - Confirm your identity: Your account has suspicious activity. Click here to verify: appl3.com/verify'",
+        "language": "fr",
+        "choices": ["Sûr", "Arnaque"],
+        "correctChoice": "Arnaque",
+        "explanations": [
+          "Le domaine 'appl3.com' (avec chiffre 3 au lieu de la lettre e) est une imitation classique d'Apple. Apple ne vérifierait jamais via un email avec lien.",
+          "Solution: Ouvre Paramètres > [Ton nom] > Mot de passe et sécurité directement dans l'app iOS. Ne clique jamais sur les liens."
+        ],
+        "tags": ["phishing", "email", "identity_theft"],
+        "riskSignals": ["fake_brand", "suspicious_domain", "suspicious_tld"]
+      }
+    ],
+    "otp_defense": [
+      {
+        "id": "otp_1",
+        "chat": [
+          { "from": "contact", "text": "السلام عليكم! أنا من بنك تونس. عندنا مشكلة في حسابك. بعت لك كود OTP - قول لي الكود عشان نحلّها." },
+          { "from": "system", "text": "وصلك SMS: Your OTP is 845362. Don't share it." }
+        ],
+        "choices": ["نرفض ونبلّغ", "نبعث الكود", "نتأكد عبر اتصال"],
+        "correctChoice": "نتأكد عبر اتصال",
+        "explanations": [
+          "البنك لن يطلب الكود OTP عبر WhatsApp أو call. الكود يجب يبقى سري 100%. الحل الصحيح: اتصل بالبنك على الرقم بالبطاقة.",
+          "إذا كانت هناك مشكلة، البنك نفسه بيتصل بيك أو بيطلبك تدخل الـ app."
+        ],
+        "afterWinTips": ["فعّل 2FA من الـ settings", "غيّر الـ password بعد كل شك", "سجّل جميع أجهزتك المعتمدة"]
+      },
+      {
+        "id": "otp_2",
+        "chat": [
+          { "from": "contact", "text": "أخي صح؟ أنا صاحبك من الشغل. عندي مشكلة في حسابي البنكي وفي مساعد طالب مني كود OTP. شنوا أرسلك قبل شوية؟" },
+          { "from": "system", "text": "وصلك SMS: Ooredoo: Your OTP is 923156. Valid for 5 min." }
+        ],
+        "choices": ["نرفض ونبلّغ", "نبعث الكود", "نتأكد عبر اتصال"],
+        "correctChoice": "نرفض ونبلّغ",
+        "explanations": [
+          "لا، حتى لو كان صديقك! الـ OTP ما يُشاركش أبدا حتى مع أقرب الناس. هذا تكتيك احتيال كلاسيكي - حسابه ربما اتهاك.",
+          "يجب تنبهه فورا على رقم آخر أنهم جربوا يسرقوا الـ OTP منك."
+        ],
+        "afterWinTips": ["فعّل 2FA من الـ authentication app", "غيّر كلمة السر", "اتصل بالبنك إذا كانت مشكلة"]
+      },
+      {
+        "id": "otp_3",
+        "chat": [
+          { "from": "contact", "text": "مرحبا! أنا من الدعم التقني لـ Jumia. للتحقق من حسابك، وصل لك كود. أرسل لي الكود لتأكيد الهوية." },
+          { "from": "system", "text": "وصلك SMS: Jumia: Your verification code is 567234" }
+        ],
+        "choices": ["نرفض ونبلّغ", "نبعث الكود", "نتأكد عبر اتصال"],
+        "correctChoice": "نرفض ونبلّغ",
+        "explanations": [
+          "Jumia لن تطلب منك الكود OTP عبر WhatsApp أو email. هذا احتيال مباشر. الكود يجب يبقى معك فقط.",
+          "احتفظ بالكود، ادخل تطبيق Jumia نفسك، وأكمل التحقق من داخل الـ app."
+        ],
+        "afterWinTips": ["استخدم authentication app بدل SMS", "غيّر password بانتظام", "سجّل من أجهزة موثوقة فقط"]
+      },
+      {
+        "id": "otp_4",
+        "chat": [
+          { "from": "contact", "text": "السلام! أنا من خدمة Poste Tunisie. في عندنا مشكلة في عنوان تسليم الطرد. بعتنا لك كود تحقق. بيك تشاركوه معي على السريع؟" },
+          { "from": "system", "text": "وصلك SMS: Poste Tunisie: Code is 412890. Never share it." }
+        ],
+        "choices": ["نرفض ونبلّغ", "نبعث الكود", "نتأكد عبر اتصال"],
+        "correctChoice": "نتأكد عبر اتصال",
+        "explanations": [
+          "تصل الـ Poste عن طريق الـ app أو call مباشر، ما تطلب الكود OTP أبدا عبر WhatsApp. هذا احتيال.",
+          "إذا كانت في مشكلة حقيقية، ادخل app Poste نفسك أو اتصل بهم على الرقم الرسمي."
+        ],
+        "afterWinTips": ["فعّل 2FA", "لا تنقر على روابط من messages", "احفظ أرقام الدعم الرسمية"]
+      },
+      {
+        "id": "otp_5",
+        "chat": [
+          { "from": "contact", "text": "الحمد لله وجدتك! أنا أختك من باريس. ضيعت passeport و كنت محتاج أتحقق من حسابي هنا. أرسل لي الكود OTP اللي وصلك؟" },
+          { "from": "system", "text": "وصلك SMS: Your OTP is 334725. Valid for 10 min." }
+        ],
+        "choices": ["نرفض ونبلّغ", "نبعث الكود", "نتأكد عبر اتصال"],
+        "correctChoice": "نتأكد عبر اتصال",
+        "explanations": [
+          "حتى لو كانت 'أختك'! لا توافق على الـ OTP لأي حد. اتصل بها على رقمها الشخصي من contact list. إذا ما ردّت، احتمل حسابها اتهاك.",
+          "قول لها تتصل بـ السفارة مباشرة للمساعدة. الـ OTP ما يُطلب من الأقارب أبدا."
+        ],
+        "afterWinTips": ["استخدم 2FA قوية", "احفظ معايير التعريف", "ما تشارك codes شخصية"]
+      },
+      {
+        "id": "otp_6",
+        "chat": [
+          { "from": "contact", "text": "مرحبا! أنا تقني من Ooredoo. في مشكلة في الحساب ديك. بعتنا لك كود OTP - بلاش اشرحلي الكود علاش ماشي؟" },
+          { "from": "system", "text": "وصلك SMS: Ooredoo: Your verification code is 789123" }
+        ],
+        "choices": ["نرفض ونبلّغ", "نبعث الكود", "نتأكد عبر اتصال"],
+        "correctChoice": "نرفض ونبلّغ",
+        "explanations": [
+          "Ooredoo يتصل بيك مباشر بـ phone call إذا كانت مشكلة. ما يطلب الكود عبر WhatsApp أو SMS. هذا احتيال مباشر.",
+          "إذا كانت في مشكلة، اتصل بـ Ooredoo نفسك على 9090 أو من الـ app."
+        ],
+        "afterWinTips": ["فعّل 2FA على حسابك", "غيّر password بعد كل شك", "احفظ أرقام الدعم الرسمية"]
+      },
+      {
+        "id": "otp_7",
+        "chat": [
+          { "from": "contact", "text": "مرحبا أخي! فين الفلوس اللي قلت لي ترسل لي؟ في طريقة نحقق الحساب ديك. ما تبعت لي الكود OTP أللي وصلك شوية أهم؟" },
+          { "from": "system", "text": "وصلك SMS: Your OTP is 556789. This is a single-use code." }
+        ],
+        "choices": ["نرفض ونبلّغ", "نبعث الكود", "نتأكد عبر اتصال"],
+        "correctChoice": "نرفض ونبلّغ",
+        "explanations": [
+          "الـ OTP ما يُشاركش لأي حد - حتى لو كان بـ دين عليك! هذا احتيال بـ تخويف/ضغط نفسي.",
+          "إذا في مشكلة، روح البنك بـ شخصك. لا تشارك الكود من الهاتف."
+        ],
+        "afterWinTips": ["استخدم 2FA من authentication app", "غيّر password بعد كل تعاملات حساسة", "ما تتأثر بـ الضغط النفسي"]
+      },
+      {
+        "id": "otp_8",
+        "chat": [
+          { "from": "contact", "text": "Salut! C'est ton ami Riad. Je suis en France et j'ai besoin que tu m'envoies le code OTP qui vient d'arriver. C'est urgent pour un viremen' international." },
+          { "from": "system", "text": "وصلك SMS: Your OTP is 678945. Valid for 5 minutes." }
+        ],
+        "choices": ["نرفض ونبلّغ", "نبعث الكود", "نتأكد عبر اتصال"],
+        "correctChoice": "نتأكد عبر اتصال",
+        "explanations": [
+          "حتى لو كان صديقك الحقيقي! التحويلات البنكية لا تحتاج OTP من طرف ثاني. هذا احتيال بـ impersonation.",
+          "اتصل بـ رياد من رقمه الشخصي. إذا كان فعلا محتاج تحويل، يروح البنك هو نفسه في فرنسا."
+        ],
+        "afterWinTips": ["فعّل 2FA قوية", "احفظ معايير الأمان البنكي", "لا تشارك codes لأي حد حتى بـ البيت"]
+      },
+      {
+        "id": "otp_9",
+        "chat": [
+          { "from": "contact", "text": "مرحبا! أنا من قسم الأمان بـ بنكك. الكود اللي وصلك هو test code مـن النظام. أرسل لي الكود عشان نتأكد أن كل شيء يمشي صح." },
+          { "from": "system", "text": "وصلك SMS: Security Test: Your OTP is 445566" }
+        ],
+        "choices": ["نرفض ونبلّغ", "نبعث الكود", "نتأكد عبر اتصال"],
+        "correctChoice": "نرفض ونبلّغ",
+        "explanations": [
+          "البنك ما يبعت 'test codes' أبدا! حتى لو قال إنه security team، هذا حيلة احتيال بـ social engineering.",
+          "البنك ما يحتاج الكود منك - عنده access لـ النظام. إذا شفت رسالة غريبة، بلّغ البنك نفسه."
+        ],
+        "afterWinTips": ["غيّر password فورا", "فعّل 2FA من authentication app", "راقب حسابك للنشاط الغريب"]
+      },
+      {
+        "id": "otp_10",
+        "chat": [
+          { "from": "contact", "text": "Hi! This is Amazon support. We detected unusual activity on your account. Please share your OTP to verify your identity immediately." },
+          { "from": "system", "text": "وصلك SMS: Amazon: Your OTP is 123456. Never share this." }
+        ],
+        "choices": ["نرفض ونبلّغ", "نبعث الكود", "نتأكد عبر اتصال"],
+        "correctChoice": "نرفض ونبلّغ",
+        "explanations": [
+          "Amazon لن يتصل بك عبر WhatsApp أو سيطلب الـ OTP. هذا احتيال. Amazon يطلب منك تدخل حسابك من الـ app أو الموقع.",
+          "احفظ رقم Amazon الرسمي. إذا كانت في مشكلة، اتصل بهم من الـ app أو الموقع."
+        ],
+        "afterWinTips": ["فعّل 2FA قوية", "استخدم password manager", "راقب transactions بانتظام"]
+      }
+    ],
+    "url_spotter": [
+      {
+        "id": "url_1",
+        "options": ["https://www.facebook.com/login", "https://facebook-verify.tk/login"],
+        "correctIndex": 0,
+        "explanations": [
+          "الرابط الأول موثوق (facebook.com = الموقع الرسمي + HTTPS).",
+          "الثاني مريب جدا (facebook-verify.tk = domain مريب بـ .tk + ما فيهش HTTPS في الملخص)."
+        ],
+        "signals": ["punycode", "suspicious_tld", "no_https"]
+      },
+      {
+        "id": "url_2",
+        "options": ["https://www.banque-tunisia.tn/login", "https://bnk-tunisia.rf.gd/login"],
+        "correctIndex": 0,
+        "explanations": [
+          "الأول آمن (banque-tunisia.tn = domain .tn رسمي + HTTPS + تصميم عادي).",
+          "الثاني احتيال (deep subdomain weird + .gd = مريب جدا)."
+        ],
+        "signals": ["deep_subdomain", "suspicious_tld"]
+      },
+      {
+        "id": "url_3",
+        "options": ["https://www.tunisianet.com.tn", "https://tny.tn/tunisianet"],
+        "correctIndex": 0,
+        "explanations": [
+          "الأول هو الموقع الحقيقي (domain صحيح + HTTPS).",
+          "الثاني رابط قصير (tny.tn/...) - قد تكون آمنة لكن ما تشد إذا كنت تتوقع jumia أو متجر معين."
+        ],
+        "signals": ["shortener"]
+      },
+      {
+        "id": "url_4",
+        "options": ["https://secure.poste-tunisie.tn/track", "https://poste.poste-tunisie.tn.verify.gq/track"],
+        "correctIndex": 0,
+        "explanations": [
+          "الأول آمن (domain صحيح + HTTPS + بسيط).",
+          "الثاني احتيال (deep subdomain مريب + .gq domain مريب)."
+        ],
+        "signals": ["deep_subdomain", "suspicious_tld"]
+      },
+      {
+        "id": "url_5",
+        "options": ["https://www.ooredoo.tn", "https://0reedoo.tn"],
+        "correctIndex": 0,
+        "explanations": [
+          "الأول هو الموقع الرسمي (Ooredoo.tn بـ O عادي).",
+          "الثاني استعمل رقم 0 بدل الحرف O - هذا punycode attack!"
+        ],
+        "signals": ["punycode"]
+      },
+      {
+        "id": "url_6",
+        "options": ["https://www.facebook.com", "https://wwwfacebook.com"],
+        "correctIndex": 0,
+        "explanations": [
+          "الأول صحيح (www.facebook.com = الموقع الرسمي).",
+          "الثاني احتيال (wwwfacebook.com = domain مريب يبدو يشبه لكن ما هو نفس البناء)."
+        ],
+        "signals": ["suspicious_tld"]
+      },
+      {
+        "id": "url_7",
+        "options": ["https://jumia.tn", "https://bit.ly/jumia-promo-2024"],
+        "correctIndex": 0,
+        "explanations": [
+          "الأول آمن (jumia.tn = موقع رسمي).",
+          "الثاني مريب (رابط قصير = قد تخفي destination مريبة)."
+        ],
+        "signals": ["shortener"]
+      },
+      {
+        "id": "url_8",
+        "options": ["http://bna.tn/login", "https://www.bna.tn/login"],
+        "correctIndex": 1,
+        "explanations": [
+          "الأول (HTTP بدون S) = غير آمن. البنوك يجب تكون HTTPS دائما.",
+          "الثاني (HTTPS + www.) = آمن وموثوق."
+        ],
+        "signals": ["no_https"]
+      },
+      {
+        "id": "url_9",
+        "options": ["https://amazon.com", "https://amaz0n.com"],
+        "correctIndex": 0,
+        "explanations": [
+          "الأول آمن (amazon.com = الموقع الرسمي).",
+          "الثاني احتيال (تبديل o بـ 0 = punycode attack)."
+        ],
+        "signals": ["punycode"]
+      },
+      {
+        "id": "url_10",
+        "options": ["https://www.google.tn", "https://www-google-tn.tk/search"],
+        "correctIndex": 0,
+        "explanations": [
+          "الأول آمن (google.tn = الموقع الرسمي).",
+          "الثاني احتيال جدا (domain مريب + hyphens عجيبة + .tk)."
+        ],
+        "signals": ["punycode", "suspicious_tld", "deep_subdomain"]
+      }
+    ]
+  }
+}
