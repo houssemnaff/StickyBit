@@ -178,7 +178,7 @@ export function Chatbot() {
       {isOpen && (
         <Card className="fixed bottom-20 right-6 z-40 w-11/12 max-w-sm h-[70vh] sm:w-96 sm:h-96 flex flex-col shadow-2xl">
           <div className="bg-primary text-primary-foreground p-4 rounded-t-lg">
-            <h3 className="font-bold text-lg">مساعدك الآمن</h3>
+            <h3 className="font-bold text-lg">حكيم'مساعدك الآمن'</h3>
             <p className="text-sm text-primary-foreground/80">نصائح أمان فورية</p>
           </div>
 
