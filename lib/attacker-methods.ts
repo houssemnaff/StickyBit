@@ -6,7 +6,7 @@ export const attackerMethods = [
     titleAr: 'الهندسة الاجتماعية (Social Engineering)',
     titleFr: 'Ingénierie Sociale',
     icon: '🎭',
-    color: 'danger',
+    color: 'danger' as const,
     stages: [
       {
         stageNumber: 1,
@@ -69,7 +69,7 @@ export const attackerMethods = [
     titleAr: 'سرقة كلمات المرور (Password Theft)',
     titleFr: 'Vol de Mot de Passe',
     icon: '🔑',
-    color: 'warning',
+    color: 'warning' as const,
     stages: [
       {
         stageNumber: 1,
@@ -132,7 +132,7 @@ export const attackerMethods = [
     titleAr: 'سرقة البيانات البنكية (Banking Fraud)',
     titleFr: 'Fraude Bancaire',
     icon: '💰',
-    color: 'danger',
+    color: 'danger' as const,
     stages: [
       {
         stageNumber: 1,
@@ -195,7 +195,7 @@ export const attackerMethods = [
     titleAr: 'سرقة الحساب (Account Takeover)',
     titleFr: 'Prise de Contrôle du Compte',
     icon: '👤',
-    color: 'danger',
+    color: 'danger' as const,
     stages: [
       {
         stageNumber: 1,
