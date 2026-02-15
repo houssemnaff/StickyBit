@@ -5,9 +5,7 @@ import { Header } from '@/components/shared/header'
 import { Footer } from '@/components/shared/footer'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Textarea } from '@/components/ui/textarea'
-import { AlertTriangle, CheckCircle, AlertCircle, Upload, X, Link2, Info } from 'lucide-react'
-import Link from 'next/link'
+import { AlertTriangle, CheckCircle, Info, Upload, X, Link2, Shield } from 'lucide-react'
 
 type RiskLevel = null | 'safe' | 'suspicious' | 'danger'
 
@@ -162,44 +160,139 @@ const mockAnalyses = [
 export default function DetectorPage() {
   const [textInput, setTextInput] = useState('')
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [result, setResult] = useState<{
     risk: RiskLevel
     riskScore: number
     findings: { keyword: string; risk: string; message: string }[]
+    virusTotalData?: {
+      malicious: number
+      suspicious: number
+      harmless: number
+      undetected: number
+      total: number
+    }
   } | null>(null)
   const [isAnalyzingText, setIsAnalyzingText] = useState(false)
   const [isAnalyzingImage, setIsAnalyzingImage] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Extract URLs from text
+  const extractUrls = (text: string): string[] => {
+    const urlRegex = /https?:\/\/[^\s]+/gi
+    return text.match(urlRegex) || []
+  }
+
+  // Analyze URL with VirusTotal API
+  const analyzeUrlWithVirusTotal = async (url: string) => {
+    try {
+      const response = await fetch('/api/virustotal/url', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze URL')
+      }
+
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('VirusTotal URL analysis error:', error)
+      return null
+    }
+  }
+
+  // Analyze file with VirusTotal API
+  const analyzeFileWithVirusTotal = async (file: File) => {
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/virustotal/file', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze file')
+      }
+
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error('VirusTotal file analysis error:', error)
+      return null
+    }
+  }
 
   const analyzeContent = async (textToAnalyze: string) => {
     if (!textToAnalyze.trim()) return
 
     setIsAnalyzingText(true)
 
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
     let risk: RiskLevel = 'safe'
     let riskScore = 0
     const findings: { keyword: string; risk: string; message: string }[] = []
+    let virusTotalData = undefined
 
     const inputLower = textToAnalyze.toLowerCase()
 
-    // Check for URLs and non-.tn domains
-    const urlRegex = /https?:\/\/[^\s]+/gi
-    const urls = inputLower.match(urlRegex) || []
-    
+    // Extract and analyze URLs with VirusTotal
+    const urls = extractUrls(textToAnalyze)
+    if (urls.length > 0) {
+      const vtResult = await analyzeUrlWithVirusTotal(urls[0])
+      
+      if (vtResult && vtResult.data) {
+        const stats = vtResult.data.attributes.last_analysis_stats
+        virusTotalData = {
+          malicious: stats.malicious || 0,
+          suspicious: stats.suspicious || 0,
+          harmless: stats.harmless || 0,
+          undetected: stats.undetected || 0,
+          total: stats.malicious + stats.suspicious + stats.harmless + stats.undetected
+        }
+
+        if (stats.malicious > 0) {
+          riskScore += 40
+          findings.push({
+            keyword: 'VirusTotal: رابط خطير',
+            risk: 'danger',
+            message: `${stats.malicious} محرك مكافحة فيروسات اكتشف تهديداً في هذا الرابط`
+          })
+        } else if (stats.suspicious > 0) {
+          riskScore += 25
+          findings.push({
+            keyword: 'VirusTotal: رابط مشبوه',
+            risk: 'suspicious',
+            message: `${stats.suspicious} محرك اعتبر الرابط مشبوهاً`
+          })
+        } else if (stats.harmless > 5) {
+          findings.push({
+            keyword: 'VirusTotal: رابط نظيف',
+            risk: 'safe',
+            message: `${stats.harmless} محرك أكد أن الرابط آمن`
+          })
+        }
+      }
+    }
+
+    // Check for non-.tn domains
     for (const url of urls) {
       if (!/\.(tn|gov\.tn|com\.tn)($|\/)/i.test(url)) {
-        riskScore += 30
+        riskScore += 20
         findings.push({
           keyword: 'رابط خارجي',
-          risk: 'danger',
+          risk: 'suspicious',
           message: 'الرابط لا ينتمي للموقع الرسمي (.tn أو .gov.tn)'
         })
       }
     }
 
+    // Check against keyword database
     mockAnalyses.forEach((analysis) => {
       if (inputLower.includes(analysis.keyword.toLowerCase())) {
         findings.push(analysis)
@@ -209,19 +302,20 @@ export default function DetectorPage() {
     })
 
     // Determine risk level
-    if (riskScore >= 30) risk = 'danger'
-    else if (riskScore >= 15) risk = 'suspicious'
+    if (riskScore >= 60) risk = 'danger'
+    else if (riskScore >= 30) risk = 'suspicious'
     else risk = 'safe'
 
     setResult({
       risk,
       riskScore: Math.min(riskScore, 100),
-      findings
+      findings,
+      virusTotalData
     })
     setIsAnalyzingText(false)
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -229,12 +323,17 @@ export default function DetectorPage() {
     reader.onload = async (event) => {
       const imageUrl = event.target?.result as string
       setUploadedImage(imageUrl)
+      setUploadedFile(file)
       
-      // Simulate OCR extraction
       setIsAnalyzingImage(true)
-      await new Promise((resolve) => setTimeout(resolve, 2000))
       
-      // Mock extracted text - in production, use real OCR
+      // Analyze file with VirusTotal
+      const vtResult = await analyzeFileWithVirusTotal(file)
+      
+      // Simulate OCR extraction (integrate real OCR in production)
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      
+      // Mock extracted text
       const mockExtractedText = `
         عاجل! فزت بجائزة 1000 دينار
         للحصول على الجائزة انقر على الرابط:
@@ -244,8 +343,26 @@ export default function DetectorPage() {
       
       setIsAnalyzingImage(false)
       
-      // Auto-analyze after extraction
+      // Analyze extracted text
       await analyzeContent(mockExtractedText)
+      
+      // Add VirusTotal results if available
+      if (vtResult && vtResult.data) {
+        const stats = vtResult.data.attributes.last_analysis_stats
+        const virusTotalData = {
+          malicious: stats.malicious || 0,
+          suspicious: stats.suspicious || 0,
+          harmless: stats.harmless || 0,
+          undetected: stats.undetected || 0,
+          total: stats.malicious + stats.suspicious + stats.harmless + stats.undetected
+        }
+
+        setResult(prev => prev ? {
+          ...prev,
+          virusTotalData,
+          riskScore: Math.min((prev.riskScore || 0) + (stats.malicious * 10), 100)
+        } : null)
+      }
     }
     reader.readAsDataURL(file)
   }
@@ -272,6 +389,7 @@ export default function DetectorPage() {
 
   const removeImage = () => {
     setUploadedImage(null)
+    setUploadedFile(null)
     setResult(null)
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
@@ -279,21 +397,9 @@ export default function DetectorPage() {
   }
 
   const getRiskColor = (score: number) => {
-    if (score >= 70) return 'rgb(239, 68, 68)' // red-500
-    if (score >= 40) return 'rgb(245, 158, 11)' // amber-500
-    return 'rgb(16, 185, 129)' // emerald-500
-  }
-
-  const getRiskBgColor = (score: number) => {
-    if (score >= 70) return 'bg-red-50'
-    if (score >= 40) return 'bg-amber-50'
-    return 'bg-emerald-50'
-  }
-
-  const getRiskBorderColor = (score: number) => {
-    if (score >= 70) return 'border-red-200'
-    if (score >= 40) return 'border-amber-200'
-    return 'border-emerald-200'
+    if (score >= 70) return 'rgb(239, 68, 68)'
+    if (score >= 40) return 'rgb(245, 158, 11)'
+    return 'rgb(16, 185, 129)'
   }
 
   const getRiskLabel = (score: number) => {
@@ -315,6 +421,10 @@ export default function DetectorPage() {
             <p className="text-slate-600 text-lg max-w-2xl mx-auto">
               حلّل أي رسالة أو رابط أو صورة مشبوهة للكشف عن محاولات الاحتيال
             </p>
+            <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-800 rounded-full text-sm font-semibold">
+              <Shield className="w-4 h-4" />
+              مدعوم بـ VirusTotal API
+            </div>
           </div>
           
           <div className="grid gap-6 lg:grid-cols-2">
@@ -371,6 +481,45 @@ export default function DetectorPage() {
                   )}
                 </div>
               </Card>
+
+              {/* VirusTotal Results */}
+              {result?.virusTotalData && (
+                <Card className="p-6 bg-white border-slate-200 shadow-md">
+                  <h3 className="mb-4 flex items-center gap-2 font-bold text-slate-900">
+                    <Shield className="h-5 w-5 text-blue-600" />
+                    نتائج VirusTotal
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-red-50 rounded-lg p-3 border border-red-200">
+                      <div className="text-2xl font-bold text-red-700">
+                        {result.virusTotalData.malicious}
+                      </div>
+                      <div className="text-xs text-red-600">خطير</div>
+                    </div>
+                    <div className="bg-amber-50 rounded-lg p-3 border border-amber-200">
+                      <div className="text-2xl font-bold text-amber-700">
+                        {result.virusTotalData.suspicious}
+                      </div>
+                      <div className="text-xs text-amber-600">مشبوه</div>
+                    </div>
+                    <div className="bg-emerald-50 rounded-lg p-3 border border-emerald-200">
+                      <div className="text-2xl font-bold text-emerald-700">
+                        {result.virusTotalData.harmless}
+                      </div>
+                      <div className="text-xs text-emerald-600">آمن</div>
+                    </div>
+                    <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+                      <div className="text-2xl font-bold text-slate-700">
+                        {result.virusTotalData.undetected}
+                      </div>
+                      <div className="text-xs text-slate-600">غير مكتشف</div>
+                    </div>
+                  </div>
+                  <div className="mt-3 text-xs text-slate-500 text-center">
+                    تم الفحص بواسطة {result.virusTotalData.total} محرك أمان
+                  </div>
+                </Card>
+              )}
 
               {/* Indicators */}
               {result && result.findings.length > 0 && (
@@ -465,7 +614,7 @@ export default function DetectorPage() {
                       <div className="text-center py-4">
                         <div className="inline-block animate-spin text-3xl mb-2">⏳</div>
                         <p className="text-sm text-slate-600">
-                          جاري استخراج النص من الصورة...
+                          جاري استخراج النص وفحص الملف...
                         </p>
                       </div>
                     )}
@@ -502,7 +651,7 @@ export default function DetectorPage() {
                   {isAnalyzingText ? (
                     <>
                       <span className="animate-spin me-2">⏳</span>
-                      جاري التحليل...
+                      جاري التحليل مع VirusTotal...
                     </>
                   ) : (
                     <>
