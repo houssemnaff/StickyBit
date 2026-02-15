@@ -136,7 +136,7 @@ export function Header() {
               className="block py-2 hover:text-emerald-400 hover:bg-emerald-500/10 px-3 rounded-lg transition-all"
               onClick={() => setMobileMenuOpen(false)}
             >
-              ألعاب
+              كيفاش يسرقوك؟
             </Link>
             <Link
               href="/simulator"
@@ -171,21 +171,21 @@ export function Header() {
               className="block py-2 hover:text-emerald-400 hover:bg-emerald-500/10 px-3 rounded-lg transition-all"
               onClick={() => setMobileMenuOpen(false)}
             >
-              دليل التعافي
+              خطة الطوارئ
             </Link>
             <Link
               href="/glossary"
               className="block py-2 hover:text-emerald-400 hover:bg-emerald-500/10 px-3 rounded-lg transition-all"
               onClick={() => setMobileMenuOpen(false)}
             >
-              القاموس
+              تعلم المصطلحات
             </Link>
             <Link
               href="/report"
               className="block py-2 hover:text-emerald-400 hover:bg-emerald-500/10 px-3 rounded-lg transition-all"
               onClick={() => setMobileMenuOpen(false)}
             >
-              بلّغ عن احتيال
+              نحذّرو بعضنا
             </Link>
             <Link
               href="/profile"
