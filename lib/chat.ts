@@ -1,41 +1,61 @@
 'use server'
 
-import { OpenRouter } from '@openrouter/sdk'
-
-const openRouter = new OpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY,
-  defaultHeaders: {
-    'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
-    'X-Title': 'CyberAman',
-  },
-})
-
 export async function getChatResponse(userMessage: string) {
+  if (!userMessage || userMessage.trim() === '') {
+    return {
+      success: false,
+      message: 'يرجى إدخال رسالة صالحة.',
+    }
+  }
+
   try {
-    const completion = await openRouter.chat.completions.create({
-      model: 'openai/gpt-3.5-turbo',
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a cybersecurity expert assistant named "CyberAman Assistant". Your goal is to help users protect themselves from online scams and cyber threats. Provide concise, helpful, and accurate advice in Arabic.',
-        },
-        {
-          role: 'user',
-          content: userMessage,
-        },
-      ],
-      stream: false,
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'HTTP-Referer': process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+        'X-Title': 'CyberAman',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'openai/gpt-4-turbo',
+        messages: [
+          {
+            role: 'system',
+            content:
+              'أنت مساعد خبير في الأمن السيبراني باسم "CyberAman Assistant". هدفك هو مساعدة المستخدمين على حماية أنفسهم من الاحتيال والتهديدات السيبرانية. قدم نصائح مختصرة ودقيقة وبلغة عربية سهلة.',
+          },
+          {
+            role: 'user',
+            content: userMessage,
+          },
+        ],
+      }),
     })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(`OpenRouter API error: ${response.status} - ${errorData?.error?.message || 'Unknown error'}`)
+    }
+
+    const data = await response.json()
+    const message = data.choices?.[0]?.message?.content || 'لم يتم الحصول على استجابة من النموذج.'
 
     return {
       success: true,
-      message: completion.choices[0].message.content,
+      message,
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error calling OpenRouter:', error)
+
+    let errorMessage = 'عذراً، حدث خطأ أثناء الاتصال بالمساعد الذكي. يرجى المحاولة لاحقاً.'
+    if (error?.message?.includes('401')) {
+      errorMessage = 'مفتاح API غير صالح. تحقق من إعداداتك.'
+    }
+
     return {
       success: false,
-      message: 'عذراً، حدث خطأ أثناء الاتصال بالمساعد الذكي. يرجى المحاولة لاحقاً.',
+      message: errorMessage,
     }
   }
 }
